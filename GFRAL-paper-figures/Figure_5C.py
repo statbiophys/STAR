@@ -8,19 +8,23 @@ Created on Thu Sep  3 11:38:18 2026
 """
 
 
+import os
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Paths are resolved relative to this file, so the scripts run from anywhere.
+HERE = Path(__file__).resolve().parent
+DATA_ROOT = Path(os.environ.get("STAR_DATA", HERE / "data"))
+OUTPUT_DIR = Path(os.environ.get("STAR_FIGURES", HERE / "figures"))
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# File
-INPUT_FILE = "dfGFRALKDiptm2.xls"
+# Input: the table written by Figure2_3_4.py -- run that script first.
+INPUT_FILE = OUTPUT_DIR / "df_GFRAL_KD_iptm.tsv"
 
-
-# Read Excel file
-df = pd.read_excel(INPUT_FILE)
-
-
+df = pd.read_table(INPUT_FILE, sep="\t")
 # Make sure IPTM is numeric
 df["iptm"] = pd.to_numeric(df["iptm"], errors="coerce")
 
@@ -35,17 +39,6 @@ print(f"Mean iptm (BINDER):     {np.mean(binder):.4f}")
 print(f"Mean iptm (NON BINDER): {np.mean(non_binder):.4f}")
 
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-
-
-# File
-INPUT_FILE = "dfGFRALKDiptm2.xls"
-
-
-# Read Excel file
-df = pd.read_excel(INPUT_FILE)
 
 
 # Make sure IPTM is numeric
@@ -106,8 +99,8 @@ plt.tight_layout()
 
 
 # Export
-fig.savefig('iptm_scatter.pdf', dpi=300, bbox_inches='tight')
-fig.savefig('iptm_scatter.png', dpi=300, bbox_inches='tight')
+fig.savefig(OUTPUT_DIR / 'iptm_scatter.pdf', dpi=300, bbox_inches='tight')
+fig.savefig(OUTPUT_DIR / 'iptm_scatter.png', dpi=300, bbox_inches='tight')
 
 
 plt.show()

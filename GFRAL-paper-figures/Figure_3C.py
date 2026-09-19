@@ -8,9 +8,18 @@ Created on Tue Jul 28 16:11:42 2026
 """
 
 
+import os
+from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+
+# Paths are resolved relative to this file, so the scripts run from anywhere.
+HERE = Path(__file__).resolve().parent
+DATA_ROOT = Path(os.environ.get("STAR_DATA", HERE / "data"))
+OUTPUT_DIR = Path(os.environ.get("STAR_FIGURES", HERE / "figures"))
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # -----------------------
@@ -18,7 +27,7 @@ import numpy as np
 # -----------------------
 
 
-df = pd.read_excel("SI_Dataset_1_withnumbers.xlsx")
+df = pd.read_excel(DATA_ROOT / "spr" / "SI_Dataset_1_withnumbers.xlsx")
 
 
 # Column names
@@ -115,14 +124,14 @@ fig.tight_layout()
 
 
 fig.savefig(
-    "Fig3C_new.pdf",
+    OUTPUT_DIR / "Fig3C_new.pdf",
     format="pdf",
     bbox_inches="tight"
 )
 
 
 fig.savefig(
-    "Fig3C_new.png",
+    OUTPUT_DIR / "Fig3C_new.png",
     dpi=600,
     bbox_inches="tight"
 )
